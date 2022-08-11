@@ -1,0 +1,57 @@
+name: Build
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  splunk_appinspect:
+    name: Splunk AppInspect
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-splunk-appinspect
+          restore-keys: |
+            ${{ runner.os }}-pip-splunk-appinspect
+
+      - name: Install Splunk AppInspect
+        run: pip install splunk-appinspect
+
+      - run: make splunk_fastly-latest.tar.gz
+
+      - name: Run splunk-appinspect inspect
+        run: splunk-appinspect inspect --included-tags cloud --max-messages all splunk_fastly-latest.tar.gz
+
+  slim:
+    name: Splunk Packaging Toolkit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Splunk Packaging Toolkit version 1.0.1 doesn't work with Python 3.10
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-splunk-packaging-toolkit
+          restore-keys: |
+            ${{ runner.os }}-pip-splunk-packaging-toolkit
+
+      - name: Install Splunk Packaging Toolkit
+        run: pip install splunk-packaging-toolkit
+
+      - run: make splunk_fastly-latest.tar.gz
+
+      - name: Run slim validate
+        run: slim validate splunk_fastly-latest.tar.gz

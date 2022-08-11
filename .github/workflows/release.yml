@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  github:
+    name: GitHub
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Configure git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Get the git tag
+        id: tag
+        run: echo ::set-output name=tag::${GITHUB_REF/refs\/tags\//}
+
+      - name: Update the version in app.conf
+        run: perl -i -pe "s/version = (\S+)/version = ${{ steps.tag.outputs.tag }}/" app/default/app.conf
+
+      - name: Create the app.conf changes
+        run: |
+          git checkout -b release-${{ steps.tag.outputs.tag }}
+          git add app/default/app.conf
+          git commit -m "chore: update app.conf version to ${{ steps.tag.outputs.tag }}"
+          git push origin release-${{ steps.tag.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Open the pull request
+        run: |
+          gh pr create --title "Release ${{ steps.tag.outputs.tag }}" --fill --reviewer "${{ github.actor }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: make splunk_fastly-${{ steps.tag.outputs.tag }}.tar.gz
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: splunk_fastly-${{ steps.tag.outputs.tag }}.tar.gz
+          path: splunk_fastly-${{ steps.tag.outputs.tag }}.tar.gz
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: splunk_fastly-${{ steps.tag.outputs.tag }}.tar.gz
+          asset_name: splunk_fastly-${{ steps.tag.outputs.tag }}.tar.gz
+          asset_content_type: application/gzip

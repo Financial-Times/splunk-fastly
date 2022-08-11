@@ -1,0 +1,4 @@
+# Ignore the app.manifest file that the slim CLI creates, only used for publishing to Splunkbase.
+app.manifest
+
+splunk_fastly-*.tar.gz

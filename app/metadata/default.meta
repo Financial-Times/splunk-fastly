@@ -1,0 +1,13 @@
+# Application-level permissions
+
+[]
+access = read : [ * ], write : [ sc_admin, admin, power ]
+
+[props]
+export = system
+
+[tags]
+export = system
+
+[transforms]
+export = system
