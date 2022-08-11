@@ -47,7 +47,7 @@ You can also use the Splunk CLI to install or update the app:
 
 You can recreate Heroku logplex sending logs to the Splunk HEC using the following curl command.
 
-Ensure your Splunk HEC token has the default source type set to `heroku_requests`.
+Ensure your Splunk HEC token has the default source type set to `fastly`.
 
 ```shell
 curl --user "x:$SPLUNK_HEC_TOKEN" --header 'Content-Type: application/json' 'http://localhost:8088/services/collector/event' < logs.txt
