@@ -6,9 +6,9 @@ This Splunk app is compatible with the [Splunk Common Information Model (CIM)](h
 
 ## Source types
 
-| Source type | Description                                                                                                                                                                                            |
-|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `fastly`    | Fastly service request logs. See the ["Fastly Logging Format" proposal](https://docs.google.com/document/d/1QEziLUj-UcSfju9zhvvBeOq6sl5taOwGxLVjSALPCgA/edit) for documentation on the message format. |
+| Source type      | Description                                                                                                                                                                                            |
+|------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `fastly:request` | Fastly service request logs. See the ["Fastly Logging Format" proposal](https://docs.google.com/document/d/1QEziLUj-UcSfju9zhvvBeOq6sl5taOwGxLVjSALPCgA/edit) for documentation on the message format. |
 
 ## Releasing
 
