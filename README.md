@@ -2,13 +2,16 @@
 
 Support for [Fastly's real-time log streaming](https://docs.fastly.com/en/guides/about-fastlys-realtime-log-streaming-features) packaged as a Splunk app.
 
-This Splunk app is compatible with the [Splunk Common Information Model (CIM)](https://docs.splunk.com/Documentation/CIM/5.0.1/User/Overview) for [Web](https://docs.splunk.com/Documentation/CIM/5.0.1/User/Web).
+This Splunk app is compatible with the [Splunk Common Information Model (CIM)](https://docs.splunk.com/Documentation/CIM/5.0.1/User/Overview) for [Web](https://docs.splunk.com/Documentation/CIM/5.0.1/User/Web) and [Intrusion Detection](https://docs.splunk.com/Documentation/CIM/5.0.1/User/IntrusionDetection).
 
 ## Source types
 
-| Source type      | Description                                                                                                                                                                                            |
-|------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `fastly:request` | Fastly service request logs. See the ["Fastly Logging Format" proposal](https://docs.google.com/document/d/1QEziLUj-UcSfju9zhvvBeOq6sl5taOwGxLVjSALPCgA/edit) for documentation on the message format. |
+<!-- Update this table using https://www.tablesgenerator.com/markdown_tables. -->
+
+| Source type      | Description          |
+|------------------|----------------------|
+| `fastly:request` | Fastly request logs. |
+| `fastly:waf`     | Fastly WAF logs.     |
 
 ## Releasing
 
