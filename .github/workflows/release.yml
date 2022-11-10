@@ -21,7 +21,7 @@ jobs:
 
       - name: Get the git tag
         id: tag
-        run: echo ::set-output name=tag::${GITHUB_REF/refs\/tags\//}
+        run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
 
       - name: Update the version in app.conf
         run: perl -i -pe "s/version = (\S+)/version = ${{ steps.tag.outputs.tag }}/" app/default/app.conf
