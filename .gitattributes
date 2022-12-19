@@ -5,3 +5,7 @@
 LICENSE export-ignore
 Makefile export-ignore
 README.md export-ignore
+
+# GitHub Linguist congfiguration, see https://github.com/github/linguist/blob/master/docs/overrides.md.
+
+*.conf linguist-language=INI
