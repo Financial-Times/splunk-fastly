@@ -11,3 +11,6 @@ export = system
 
 [tags]
 export = system
+
+[transforms]
+export = system
