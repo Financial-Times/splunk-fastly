@@ -2,15 +2,7 @@
 
 []
 access = read : [ * ], write : [ sc_admin, admin ]
-
-[eventtypes]
 export = system
 
-[props]
-export = system
-
-[tags]
-export = system
-
-[transforms]
-export = system
+[views]
+export = none

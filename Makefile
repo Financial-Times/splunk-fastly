@@ -9,7 +9,7 @@ latest: splunk_fastly-latest.tar.gz
 #
 # The tar directory structure must include a base directory named
 # after the app ID in app.conf.
-splunk_fastly-%.tar.gz: $(wildcard app/default/*.conf) $(wildcard app/metadata/*.meta)
+splunk_fastly-%.tar.gz: $(shell find app/ -type f -name '*') $(shell find app/ -type d)
 	mkdir -p $(TMPDIR)/splunk_fastly/
 	cp -r app/* $(TMPDIR)/splunk_fastly/
 	tar -C $(TMPDIR) -czf $(TMPDIR)/$@ splunk_fastly/

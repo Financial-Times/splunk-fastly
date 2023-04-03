@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "apiVersion": "1.0.0"
+  },
+  "tokens": [
+    "__settings__.logging.loglevel",
+    "fastly_api_token",
+    "created_at"
+  ],
+  "global_settings": {
+    "logging": {
+      "level": "{{__settings__.logging.loglevel}}"
+    }
+  },
+  "requests": [
+    {
+      "pre_process": {
+        "skip_conditions": [],
+        "pipeline": [
+          {
+            "input": [
+              "{{created_at}}"
+            ],
+            "method": "set_var",
+            "output": "_raw_created_at"
+          },
+          {
+            "input": [
+              "{{created_at}}",
+              "%Y-%m-%dT%H:%M:%SZ",
+              "%Y-%m-%dT%H:%M:%SZ"
+            ],
+            "method": "time_str2str",
+            "output": "created_at"
+          }
+        ]
+      },
+      "request": {
+        "url": "https://api.fastly.com/events?sort=created_at&filter[created_at][gt]={{created_at}}",
+        "method": "GET",
+        "headers": {
+          "Fastly-Key": "{{fastly_api_token}}"
+        }
+      },
+      "post_process": {
+        "skip_conditions": [
+          {
+            "input": [
+              "{{__response__.body}}",
+              "$.$.data[*].attributes"
+            ],
+            "method": "json_empty"
+          }
+        ],
+        "pipeline": [
+          {
+            "input": [
+              "{{__response__.body}}",
+              "$.$.data[-1].attributes.created_at"
+            ],
+            "method": "json_path",
+            "output": "created_at"
+          },
+          {
+            "input": [
+              "{{created_at != ''}}",
+              "The value of token 'created_at' extracted from response cannot be empty!"
+            ],
+            "method": "assert_true"
+          },
+          {
+            "input": [
+              "{{created_at == _raw_created_at}}"
+            ],
+            "method": "exit_if_true"
+          },
+          {
+            "input": [
+              "{{created_at}}"
+            ],
+            "method": "set_var",
+            "output": "_raw_created_at"
+          },
+          {
+            "input": [
+              "{{__response__.body}}",
+              "$.$.data[*].attributes"
+            ],
+            "method": "json_path",
+            "output": "__stdout__"
+          },
+          {
+            "input": [
+              "{{__stdout__}}",
+              "",
+              "{{index}}",
+              "{{host}}",
+              "{{source}}",
+              "{{sourcetype}}"
+            ],
+            "method": "splunk_xml",
+            "output": "__stdout__"
+          },
+          {
+            "input": [
+              "{{__stdout__}}"
+            ],
+            "method": "std_output"
+          }
+        ]
+      },
+      "iteration_mode": {
+        "iteration_count": "100",
+        "stop_conditions": [
+          {
+            "input": [
+              "{{__response__.body}}",
+              "$.$.data[*].attributes"
+            ],
+            "method": "json_empty"
+          }
+        ]
+      },
+      "checkpoint": {
+        "content": {
+          "created_at": "{{_raw_created_at}}"
+        }
+      }
+    }
+  ]
+}
